@@ -95,11 +95,7 @@ GCTagListRowRange GCTagListRowRangeMake(NSInteger nowRow, NSInteger maxRow) {
 }
 
 - (void)awakeFromNib {
-    self.nowSelected = NSNotFound;
-    self.firstRowLeftMargin = 0.f;
-    self.backgroundColor = [UIColor clearColor];
-    self.visibleSet = GC_AUTORELEASE([[NSMutableSet alloc] init]);
-    self.reuseSet = GC_AUTORELEASE([[NSMutableDictionary alloc] init]);
+    [self customInit];
     
     if(self.dataSource) {
         [self reloadData];
@@ -109,23 +105,24 @@ GCTagListRowRange GCTagListRowRangeMake(NSInteger nowRow, NSInteger maxRow) {
 - (id)init {
     self = [super init];
     if(self) {
-        self.nowSelected = NSNotFound;
-        self.firstRowLeftMargin = 0.f;
-        self.backgroundColor = [UIColor clearColor];
-        self.visibleSet = GC_AUTORELEASE([[NSMutableSet alloc] init]);
-        self.reuseSet = GC_AUTORELEASE([[NSMutableDictionary alloc] init]);
+        [self customInit];
     }
     return self;
+}
+
+- (void)customInit
+{
+    self.nowSelected = NSNotFound;
+    self.firstRowLeftMargin = 0.f;
+    self.backgroundColor = [UIColor clearColor];
+    self.visibleSet = GC_AUTORELEASE([[NSMutableSet alloc] init]);
+    self.reuseSet = GC_AUTORELEASE([[NSMutableDictionary alloc] init]);
 }
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.nowSelected = NSNotFound;
-        self.firstRowLeftMargin = 0.f;
-        self.backgroundColor = [UIColor clearColor];
-        self.visibleSet = GC_AUTORELEASE([[NSMutableSet alloc] init]);
-        self.reuseSet = GC_AUTORELEASE([[NSMutableDictionary alloc] init]);
+        [self customInit];
     }
     return self;
 }
