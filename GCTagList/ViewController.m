@@ -64,7 +64,7 @@
     if(!tag) {
         tag = [GCTagLabel tagLabelWithReuseIdentifier:identifier];
 
-        tag.gradientColors = [GCTagLabel defaultGradoentColors];
+        tag.gradientColors = [GCTagLabel defaultGradientColors];
         
         [tag setCornerRadius:6.f];
     }
@@ -72,7 +72,7 @@
     NSString* labelText = self.tagNames[index];
     
     /**
-     * you can change the AccrssoryType with method setLabelText:accessoryType:
+     * you can change the AccessoryType with method setLabelText:accessoryType:
      * or with no accessoryButton with method setLabelText:
      */
     

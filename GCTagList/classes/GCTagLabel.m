@@ -144,7 +144,7 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
     return viewFrame;
 }
 
-+ (NSArray *)defaultGradoentColors {
++ (NSArray *)defaultGradientColors {
     return DEFAULT_LABEL_GRANITEN_COLORS;
 }
 

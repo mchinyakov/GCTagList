@@ -93,7 +93,7 @@ typedef NS_ENUM(NSInteger, GCTagLabelAccessoryType) {
                         labelMaxWidth:(CGFloat)maxWidth
                             labelFont:(UIFont *)font
                         accessoryType:(GCTagLabelAccessoryType)type;
-+ (NSArray *)defaultGradoentColors;
++ (NSArray *)defaultGradientColors;
 + (GCTagLabel *)tagLabelWithReuseIdentifier:(NSString *)identifier;
 - (id)initReuseIdentifier:(NSString *)identifier;
 
