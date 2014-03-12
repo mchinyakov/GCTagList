@@ -93,7 +93,6 @@ typedef NS_ENUM(NSInteger, GCTagLabelAccessoryType) {
                         labelMaxWidth:(CGFloat)maxWidth
                             labelFont:(UIFont *)font
                         accessoryType:(GCTagLabelAccessoryType)type;
-+ (NSArray *)defaultGradientColors;
 + (GCTagLabel *)tagLabelWithReuseIdentifier:(NSString *)identifier;
 - (id)initReuseIdentifier:(NSString *)identifier;
 
@@ -104,6 +103,8 @@ typedef NS_ENUM(NSInteger, GCTagLabelAccessoryType) {
 - (void)setLabelText:(NSString*)text accessoryType:(GCTagLabelAccessoryType)type;
 - (void)setSelected:(BOOL)selected animation:(BOOL)animated;
 - (void)setCornerRadius:(CGFloat)cornerRadius; // default is 12.f
+// BORK
+- (void)setActiveStyle:(BOOL)isActive;
 @end
 
 

@@ -61,13 +61,9 @@
     static NSString* identifier = @"TagLabelIdentifier";
     
     GCTagLabel* tag = [tagList dequeueReusableTagLabelWithIdentifier:identifier];
-    if(!tag) {
+    
+    if(!tag)
         tag = [GCTagLabel tagLabelWithReuseIdentifier:identifier];
-
-        tag.gradientColors = [GCTagLabel defaultGradientColors];
-        
-        [tag setCornerRadius:6.f];
-    }
     
     NSString* labelText = self.tagNames[index];
     
@@ -84,6 +80,9 @@
     
     //way 2
     //[tag setLabelText:labelText];
+    
+    //set inactive tag style
+    [tag setActiveStyle:NO];
     
     return tag;
 }
