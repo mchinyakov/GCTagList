@@ -66,20 +66,10 @@
         tag = [GCTagLabel tagLabelWithReuseIdentifier:identifier];
     
     NSString* labelText = self.tagNames[index];
-    
-    /**
-     * you can change the AccessoryType with method setLabelText:accessoryType:
-     * or with no accessoryButton with method setLabelText:
-     */
-    
-    /* way 1 */
-    GCTagLabelAccessoryType type = GCTagLabelAccessoryCrossSign;
-    [tag setLabelText:labelText
-        accessoryType:type];
-    
-    
-    //way 2
-    //[tag setLabelText:labelText];
+
+    [tag setLabelText:labelText accessoryType:GCTagLabelAccessoryCustom];
+    [tag setCustomAccessoryImage:[UIImage imageNamed:@"add_icon"]
+                      withInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
     
     //set inactive tag style
     [tag setTagBackgroundColor:[UIColor blackColor]

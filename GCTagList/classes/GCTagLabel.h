@@ -63,7 +63,8 @@
 typedef NS_ENUM(NSInteger, GCTagLabelAccessoryType) {
     GCTagLabelAccessoryNone,
     GCTagLabelAccessoryCrossSign,
-    GCTagLabelAccessoryArrowSign
+    GCTagLabelAccessoryArrowSign,
+    GCTagLabelAccessoryCustom
 };
 
 @interface GCTagLabel : UIView
@@ -107,6 +108,7 @@ typedef NS_ENUM(NSInteger, GCTagLabelAccessoryType) {
  */
 - (void)setLabelText:(NSString*)text;
 - (void)setLabelText:(NSString*)text accessoryType:(GCTagLabelAccessoryType)type;
+- (void)setCustomAccessoryImage:(UIImage *)image withInsets:(UIEdgeInsets)insets;
 - (void)setSelected:(BOOL)selected animation:(BOOL)animated;
 /* style managing */
 - (void)setTagBackgroundColor:(UIColor *)tagBackgroundColor
