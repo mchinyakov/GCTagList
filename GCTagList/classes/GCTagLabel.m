@@ -53,7 +53,6 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
 }
 @property (nonatomic, GC_STRONG) UILabel *label;
 @property (nonatomic, GC_STRONG) UIButton *accessoryButton;
-@property (nonatomic, GC_STRONG) NSString *accessoryCustomImage;
 @property (nonatomic, GC_STRONG) NSString *privateReuseIdentifier;
 @property (assign) NSInteger index;
 
@@ -125,12 +124,12 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
     // public property
     self.labelTextColor = nil;
     self.labelBackgroundColor = nil;
+    self.labelFont = nil;
     self.tagBackgroundColor = nil;
     
     // private property
     self.label = nil;
     self.accessoryButton = nil;
-    self.accessoryCustomImage = nil;
     self.privateReuseIdentifier = nil;
 #if !GC_SUPPORT_ARC
     [super dealloc];
@@ -168,6 +167,11 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
 
 - (void)setLabelText:(NSString *)text accessoryType:(GCTagLabelAccessoryType)type
 {
+    [self setLabelText:text accessoryType:type textFont:nil];
+}
+
+- (void)setLabelText:(NSString *)text accessoryType:(GCTagLabelAccessoryType)type textFont:(UIFont *)font
+{
     self.backgroundColor = [UIColor clearColor];
     self.accessoryType = type;
     
@@ -180,7 +184,7 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
          */
         self.label.textAlignment = 1;
         self.label.backgroundColor = [UIColor clearColor];
-        self.label.font = [UIFont systemFontOfSize: DEFAULT_LABEL_FONT_SIZE];
+        self.label.font = (font != nil ? font :[UIFont systemFontOfSize: DEFAULT_LABEL_FONT_SIZE]);
         
         [self addSubview:self.label];
     }
@@ -200,7 +204,7 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
         if (type != GCTagLabelAccessoryCustom)
         {
             [self.accessoryButton setImage:[UIImage imageNamed:
-                                        imageFontNameForType(type)]
+                                            imageFontNameForType(type)]
                                   forState:UIControlStateNormal];
             self.accessoryButton.imageEdgeInsets = UIEdgeInsetsMake(0, imageFontLeftInsetForType(type), 0, 0);
         }
@@ -213,7 +217,6 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
     {
         [self.accessoryButton removeFromSuperview];
         self.accessoryButton = nil;
-        self.accessoryCustomImage = nil;
     }
 }
 

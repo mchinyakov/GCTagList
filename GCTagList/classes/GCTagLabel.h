@@ -73,6 +73,7 @@ typedef NS_ENUM(NSInteger, GCTagLabelAccessoryType) {
 /* Label style managing */
 @property (nonatomic, GC_STRONG) UIColor *labelTextColor;
 @property (nonatomic, GC_STRONG) UIColor *labelBackgroundColor;
+@property (nonatomic, GC_STRONG) UIFont *labelFont;
 /* Tag style managing */
 @property (nonatomic, GC_STRONG) UIColor *tagBackgroundColor;
 
@@ -108,6 +109,7 @@ typedef NS_ENUM(NSInteger, GCTagLabelAccessoryType) {
  */
 - (void)setLabelText:(NSString*)text;
 - (void)setLabelText:(NSString*)text accessoryType:(GCTagLabelAccessoryType)type;
+- (void)setLabelText:(NSString*)text accessoryType:(GCTagLabelAccessoryType)type textFont:(UIFont *)font;
 - (void)setCustomAccessoryImage:(UIImage *)image withInsets:(UIEdgeInsets)insets;
 - (void)setSelected:(BOOL)selected animation:(BOOL)animated;
 /* style managing */
