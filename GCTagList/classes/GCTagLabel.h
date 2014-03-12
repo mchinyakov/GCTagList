@@ -45,11 +45,20 @@
 #define GC_RETAIN(exp) [exp retain]
 #endif
 
-@class GCTagList;
+#define DEFAULT_TAG_BACKGROUND_COLOR [UIColor colorWithString:@"#E0EAF4"]
+#define DEFAULT_TAG_CORNER_RADIUS 10.0f;
 
-extern CGFloat const LabelDefaultFontSize;
-extern CGFloat const LabelHorizontalPadding;
-extern CGFloat const LabelVerticalPadding;
+#define DEFAULT_LABEL_BACKGROUND_COLOR [UIColor lightGrayColor]
+#define DEFAULT_LABEL_TEXT_COLOR [UIColor blackColor]
+
+#define DEFAULT_LABEL_FONT_SIZE 13.0f
+#define DEFAULT_HORIZONTAL_PADDING 7.0f
+#define DEFAULT_VERTICAL_PADDING 3.0f
+
+#define DEFAULT_ACCESSORYVIEW_SIDE 25.0f
+#define DEFAULT_ACCESSORYVIEW_RECT CGRectMake(0, 0, DEFAULT_ACCESSORYVIEW_SIDE, DEFAULT_ACCESSORYVIEW_SIDE)
+
+@class GCTagList;
 
 typedef NS_ENUM(NSInteger, GCTagLabelAccessoryType) {
     GCTagLabelAccessoryNone,
@@ -60,9 +69,11 @@ typedef NS_ENUM(NSInteger, GCTagLabelAccessoryType) {
 @interface GCTagLabel : UIView
 @property (nonatomic, readonly, copy) NSString* reuseIdentifier;
 
-/* Label managing */
+/* Label style managing */
 @property (nonatomic, GC_STRONG) UIColor *labelTextColor;
 @property (nonatomic, GC_STRONG) UIColor *labelBackgroundColor;
+/* Tag style managing */
+@property (nonatomic, GC_STRONG) UIColor *tagBackgroundColor;
 
 @property (assign) GCTagLabelAccessoryType accessoryType;
 
@@ -97,7 +108,10 @@ typedef NS_ENUM(NSInteger, GCTagLabelAccessoryType) {
 - (void)setLabelText:(NSString*)text;
 - (void)setLabelText:(NSString*)text accessoryType:(GCTagLabelAccessoryType)type;
 - (void)setSelected:(BOOL)selected animation:(BOOL)animated;
-- (void)setBackgroundColor:(UIColor *)backgroundColor withTextColor:(UIColor *)textColor;
+/* style managing */
+- (void)setTagBackgroundColor:(UIColor *)tagBackgroundColor
+      andLabelBackgroundColor:(UIColor *)labelBackgroundColor
+           withLabelTextColor:(UIColor *)labelTextColor;
 @end
 
 

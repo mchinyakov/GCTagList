@@ -82,7 +82,9 @@
     //[tag setLabelText:labelText];
     
     //set inactive tag style
-    [tag setBackgroundColor:[UIColor blackColor] withTextColor:[UIColor orangeColor]];
+    [tag setTagBackgroundColor:[UIColor blackColor]
+       andLabelBackgroundColor:[UIColor blackColor]
+            withLabelTextColor:[UIColor orangeColor]];
     
     return tag;
 }
