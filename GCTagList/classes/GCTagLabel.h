@@ -59,24 +59,19 @@ typedef NS_ENUM(NSInteger, GCTagLabelAccessoryType) {
 
 @interface GCTagLabel : UIView
 @property (nonatomic, readonly, copy) NSString* reuseIdentifier;
-@property (nonatomic, GC_STRONG) UIColor *labelTextColor;
 
-/**
- * labelBackgroundColor's Priority > gradientColors,
- * if labelBackgroundColor and gradientColors all nil,
- * will use default color #E0EAF4
- */
+/* Label managing */
+@property (nonatomic, GC_STRONG) UIColor *labelTextColor;
 @property (nonatomic, GC_STRONG) UIColor *labelBackgroundColor;
 
-/**
- * if gradientColors's count is less 2, will use default labelBackgroundColor;
- */
-@property (nonatomic, GC_STRONG) NSArray *gradientColors; ///< ...
-@property (nonatomic, GC_STRONG) NSArray *gradientLocations; ///< ...
-
 @property (assign) GCTagLabelAccessoryType accessoryType;
-@property (assign) BOOL selectedEnabled; // if YES, the taglabel could show selected state. default is YES.
+
+/* if selectedEnabled = YES then taglabel could show
+ * selected state. default is YES
+ */
+@property (assign) BOOL selectedEnabled;
 @property (readonly) BOOL selected;
+
 @property (assign) CGSize fitSize;
 
 /**
@@ -102,9 +97,7 @@ typedef NS_ENUM(NSInteger, GCTagLabelAccessoryType) {
 - (void)setLabelText:(NSString*)text;
 - (void)setLabelText:(NSString*)text accessoryType:(GCTagLabelAccessoryType)type;
 - (void)setSelected:(BOOL)selected animation:(BOOL)animated;
-- (void)setCornerRadius:(CGFloat)cornerRadius; // default is 12.f
-// BORK
-- (void)setActiveStyle:(BOOL)isActive;
+- (void)setBackgroundColor:(UIColor *)backgroundColor withTextColor:(UIColor *)textColor;
 @end
 
 

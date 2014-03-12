@@ -71,12 +71,12 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
 @property (nonatomic, GC_STRONG) UIButton *accessoryButton;
 @property (nonatomic, GC_STRONG) NSString *privateReuseIdentifier;
 @property (assign) NSInteger index;
-@property (assign) BOOL isUsedGradient;
 
 - (void)resizeLabel;
 
-/** use the LabelBackgroundColor the draw the TagLabel's background */
 - (void)drawTagLabelUseLabelBackgroundColor:(UIColor *)color animated:(BOOL)animated;
+- (void)drawTagLabelUseLabelBackgroundCGColor:(CGColorRef)color animated:(BOOL)animated;
+
 @end
 
 @implementation GCTagLabel
@@ -129,10 +129,6 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
     return viewFrame;
 }
 
-+ (NSArray *)defaultGradientColors {
-    return DEFAULT_LABEL_GRADIENT_COLORS;
-}
-
 + (GCTagLabel *)tagLabelWithReuseIdentifier:(NSString *)identifier {
     GCTagLabel *tag = GC_AUTORELEASE([[GCTagLabel alloc] initReuseIdentifier:identifier]);
     return tag;
@@ -151,20 +147,10 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
 #endif
 }
 
-- (void)setActiveStyle:(BOOL)isActive
+- (void)setBackgroundColor:(UIColor *)backgroundColor withTextColor:(UIColor *)textColor
 {
-    if (isActive)
-    {
-        self.labelTextColor = [UIColor blackColor];
-        self.layer.backgroundColor = [UIColor orangeColor].CGColor;
-    }
-    else
-    {
-        self.labelTextColor = [UIColor orangeColor];
-        self.layer.backgroundColor = [UIColor blackColor].CGColor;
-    }
-    
-    [self setCornerRadius: 15.0f];
+    self.labelTextColor = textColor;
+    self.layer.backgroundColor =  backgroundColor.CGColor;
 }
 
 - (id)initReuseIdentifier:(NSString *)identifier {
@@ -240,15 +226,8 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
     
     if (!self.selectedEnabled)
         return;
-    
-    [self setActiveStyle:selected];
         
     [self drawTagLabelUseLabelBackgroundColor:[UIColor colorWithCGColor:self.layer.backgroundColor] animated:animated];
-}
-
-- (void)setCornerRadius:(CGFloat)cornerRadius {
-    self.gradientLayer.cornerRadius = cornerRadius;
-    self.layer.cornerRadius = cornerRadius;
 }
 
 - (void)resizeLabel {
@@ -313,18 +292,21 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
 }
 
 - (void)drawTagLabelUseLabelBackgroundColor:(UIColor *)color animated:(BOOL)animated {
+    [self drawTagLabelUseLabelBackgroundCGColor:color.CGColor animated:animated];
+}
+
+- (void)drawTagLabelUseLabelBackgroundCGColor:(CGColorRef)color animated:(BOOL)animated {
     [CATransaction begin];
     if(!animated) {
         [CATransaction setValue:(id)kCFBooleanTrue
                          forKey:kCATransactionDisableActions];
     }
     else {
-        [CATransaction setAnimationDuration:0.3f];
+        [CATransaction setAnimationDuration: 0.3f];
     }
-    self.layer.backgroundColor = color.CGColor;
+    self.layer.backgroundColor = color;
     [CATransaction commit];
 }
-
 
 - (void)didMoveToSuperview {
     if (![self.superview isKindOfClass:[GCTagList class]]) {
