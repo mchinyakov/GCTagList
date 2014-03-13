@@ -54,6 +54,7 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
 @property (nonatomic, GC_STRONG) UILabel *label;
 @property (nonatomic, GC_STRONG) UIButton *accessoryButton;
 @property (nonatomic, GC_STRONG) NSString *privateReuseIdentifier;
+@property (readwrite) CGFloat accessorySize;
 @property (assign) NSInteger index;
 
 - (void)resizeLabel;
@@ -161,6 +162,7 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
         self.privateReuseIdentifier = identifier;
         self.fitSize = CGSizeMake(self.maxWidth, 1500);
         self.labelTextColor = DEFAULT_LABEL_TEXT_COLOR;
+        self.accessorySize = DEFAULT_ACCESSORYVIEW_SIDE;
         
         self.layer.cornerRadius = DEFAULT_TAG_CORNER_RADIUS;
     }
@@ -233,13 +235,16 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
 /** 
  *  Require GCTagLabelAccessoryCustom flag via setLabelText
  */
-- (void)setCustomAccessoryImage:(UIImage *)image withInsets:(UIEdgeInsets)insets
+- (void)setCustomAccessoryImage:(UIImage *)image withInsets:(UIEdgeInsets)insets andSize:(CGFloat)widthHeight
 {
     if (self.accessoryType != GCTagLabelAccessoryCustom)
         return;
     
     [self.accessoryButton setImage:image forState:UIControlStateNormal];
+    [self.accessoryButton.imageView setContentMode:
+                                        UIViewContentModeScaleAspectFill];
     self.accessoryButton.imageEdgeInsets = insets;
+    self.accessorySize = widthHeight;
 }
 
 - (NSString *)reuseIdentifier {
@@ -258,7 +263,11 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
     
     
     //===========
-    CGFloat deviationValue = self.accessoryType != GCTagLabelAccessoryNone ? DEFAULT_ACCESSORYVIEW_SIDE : 0;
+    CGFloat accessoryInsetsSum = self.accessoryButton.imageEdgeInsets.left
+                                + self.accessoryButton.imageEdgeInsets.right;
+    
+    CGFloat deviationValue = self.accessoryType != GCTagLabelAccessoryNone ?
+        self.accessorySize + accessoryInsetsSum : 0;
     BOOL needCorrection =( (textSize.width + deviationValue + DEFAULT_HORIZONTAL_PADDING * 2) > self.maxWidth );
     
     if(needCorrection) {
@@ -279,13 +288,17 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
     if (self.accessoryType != GCTagLabelAccessoryNone) {
         CGPoint buttonPoint = CGPointZero;
         
-        buttonPoint.x = textSize.width + DEFAULT_HORIZONTAL_PADDING;
+        buttonPoint.x = textSize.width + DEFAULT_HORIZONTAL_PADDING + self.accessoryButton.imageEdgeInsets.left - self.accessoryButton.imageEdgeInsets.right;
         if(!needCorrection)
             buttonPoint.x -= 9;
-        buttonPoint.y = (textSize.height - 24) / 2 ;
+        buttonPoint.y = (textSize.height - self.accessorySize) / 2 ;
         
         CGRect buttonFrame = self.accessoryButton.frame;
         buttonFrame.origin = buttonPoint;
+        buttonFrame.size.width = self.accessorySize;
+        buttonFrame.size.height = self.accessorySize;
+        buttonFrame.size.width += accessoryInsetsSum > 0 ? accessoryInsetsSum : 0;
+        
         self.accessoryButton.frame = buttonFrame;
     }
     labelFrame.size = textSize;

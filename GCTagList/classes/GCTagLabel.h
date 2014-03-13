@@ -110,7 +110,7 @@ typedef NS_ENUM(NSInteger, GCTagLabelAccessoryType) {
 - (void)setLabelText:(NSString*)text;
 - (void)setLabelText:(NSString*)text accessoryType:(GCTagLabelAccessoryType)type;
 - (void)setLabelText:(NSString*)text accessoryType:(GCTagLabelAccessoryType)type textFont:(UIFont *)font;
-- (void)setCustomAccessoryImage:(UIImage *)image withInsets:(UIEdgeInsets)insets;
+- (void)setCustomAccessoryImage:(UIImage *)image withInsets:(UIEdgeInsets)insets andSize:(CGFloat)widthHeight;
 - (void)setSelected:(BOOL)selected animation:(BOOL)animated;
 /* style managing */
 - (void)setCornerRadius:(CGFloat)radius;

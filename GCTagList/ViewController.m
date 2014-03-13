@@ -11,7 +11,7 @@
 #import "BorkColor.h"
 #import "UIFont+BorkFont.h"
 
-#define ARY @[@"Mark Wu", @"Жемчужный лук", @"Eikiy Chang", @"Gina Sun", @"Jeremy Chang", @"Sandra Hsu"]
+#define ARY @[@"ЛУК-ПОРЕЙ", @"ЖЕМЧУЖНЫЙ ЛУК", @"САЛАТНЫЙ ЛУК", @"Gina Sun", @"Jeremy Chang", @"Sandra Hsu"]
 
 @interface ViewController () <GCTagListDataSource, GCTagListDelegate>
 @property (nonatomic, retain) NSMutableArray* tagNames;
@@ -63,10 +63,11 @@
         accessoryType:GCTagLabelAccessoryCustom
              textFont:[UIFont extraLightBorkFontWithSize:20.0f]];
     [tag setCustomAccessoryImage:[UIImage imageNamed:@"add_icon"]
-                      withInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
+                      withInsets:UIEdgeInsetsMake(0, 10, 0, 0)
+                         andSize:11.0f];
     //set inactive tag style
     [tag setTagBackgroundColor:[UIColor blackColor]
-       andLabelBackgroundColor:[UIColor blackColor]
+       andLabelBackgroundColor:[UIColor clearColor]
             withLabelTextColor:[UIColor borkOrangeColor]];
     [tag setCornerRadius:15.0f];
     
@@ -101,8 +102,8 @@
     /**
      * this is the insert method how to use.
      */
-    [self.tagNames insertObject:@"Girls' Generation" atIndex:index];
-    [self.tagNames insertObject:@"TaeTiSeo" atIndex:index];
+    [self.tagNames insertObject:@"ЛУК-ШАРЛОТ" atIndex:index];
+    [self.tagNames insertObject:@"ЖЕМЧУЖНЫЙ ЛУК" atIndex:index];
     [tagList insertTagLabelWithRange:NSMakeRange(index, 2) withAnimation:YES];
     
 }
