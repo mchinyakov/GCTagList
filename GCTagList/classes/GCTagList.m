@@ -409,10 +409,10 @@ GCTagListRowRange GCTagListRowRangeMake(NSInteger nowRow, NSInteger maxRow) {
     CGFloat occupyHeight = CGRectGetHeight(tag.frame)+tag.frame.origin.y;
     
     NSInteger tempRow = 1;
-    CGFloat h = [GCTagList heightOfRows:tempRow font:self.labelFont];
+    CGFloat h = [GCTagList heightOfRows:tempRow font:tag.labelFont];
     while (h != occupyHeight) {
         tempRow++;
-        h = [GCTagList heightOfRows:tempRow font:self.labelFont];
+        h = [GCTagList heightOfRows:tempRow font:tag.labelFont];
     }
     
     row = tempRow;
@@ -486,11 +486,7 @@ GCTagListRowRange GCTagListRowRangeMake(NSInteger nowRow, NSInteger maxRow) {
             tag.maxWidth = rowMaxWidth;
         }
         
-        // set the font for tag's label.
-        if (self.labelFont) {
-            [tag setValue:self.labelFont forKeyPath:@"label.font"];
-        }
-        
+        [tag setValue:tag.labelFont forKeyPath:@"label.font"];
         [tag performSelector:@selector(resizeLabel)];
         [tag setValue:[NSString stringWithFormat:@"%d",i] forKeyPath:@"index"];
         

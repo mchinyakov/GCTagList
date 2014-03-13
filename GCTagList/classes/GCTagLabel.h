@@ -52,7 +52,7 @@
 #define DEFAULT_LABEL_TEXT_COLOR [UIColor blackColor]
 
 #define DEFAULT_LABEL_FONT_SIZE 13.0f
-#define DEFAULT_HORIZONTAL_PADDING 7.0f
+#define DEFAULT_HORIZONTAL_PADDING 10.0f
 #define DEFAULT_VERTICAL_PADDING 3.0f
 
 #define DEFAULT_ACCESSORYVIEW_SIDE 25.0f
@@ -73,7 +73,7 @@ typedef NS_ENUM(NSInteger, GCTagLabelAccessoryType) {
 /* Label style managing */
 @property (nonatomic, GC_STRONG) UIColor *labelTextColor;
 @property (nonatomic, GC_STRONG) UIColor *labelBackgroundColor;
-@property (nonatomic, GC_STRONG) UIFont *labelFont;
+@property (readonly) UIFont *labelFont;
 /* Tag style managing */
 @property (nonatomic, GC_STRONG) UIColor *tagBackgroundColor;
 
@@ -113,6 +113,7 @@ typedef NS_ENUM(NSInteger, GCTagLabelAccessoryType) {
 - (void)setCustomAccessoryImage:(UIImage *)image withInsets:(UIEdgeInsets)insets;
 - (void)setSelected:(BOOL)selected animation:(BOOL)animated;
 /* style managing */
+- (void)setCornerRadius:(CGFloat)radius;
 - (void)setTagBackgroundColor:(UIColor *)tagBackgroundColor
       andLabelBackgroundColor:(UIColor *)labelBackgroundColor
            withLabelTextColor:(UIColor *)labelTextColor;

@@ -124,7 +124,6 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
     // public property
     self.labelTextColor = nil;
     self.labelBackgroundColor = nil;
-    self.labelFont = nil;
     self.tagBackgroundColor = nil;
     
     // private property
@@ -136,11 +135,19 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
 #endif
 }
 
+- (void)setCornerRadius:(CGFloat)radius
+{
+    self.layer.cornerRadius = radius;
+    self.label.layer.cornerRadius = radius;
+}
+
 - (void)setTagBackgroundColor:(UIColor *)tagBackgroundColor andLabelBackgroundColor:(UIColor *)labelBackgroundColor withLabelTextColor:(UIColor *)labelTextColor
 {
     self.tagBackgroundColor = tagBackgroundColor;
     self.labelBackgroundColor = labelBackgroundColor;
     self.labelTextColor = labelTextColor;
+    
+    self.label.textColor = self.labelTextColor;
 }
 
 - (id)initReuseIdentifier:(NSString *)identifier
@@ -175,19 +182,22 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
     self.backgroundColor = [UIColor clearColor];
     self.accessoryType = type;
     
-    if (self.label == nil) {
+    if (self.label == nil)
+    {
         self.label = GC_AUTORELEASE([[UILabel alloc] init]);
-        /**
-         * this set the label's textAlignment equals to 1 because the UITextAlignment is for iOS < 6.0
-         * NSTextAlignment is for >= 6.0.
-         * NSTextAlignmentCenter and UITextAlignmentCenter all equal to 1.
-         */
-        self.label.textAlignment = 1;
-        self.label.backgroundColor = [UIColor clearColor];
-        self.label.font = (font != nil ? font :[UIFont systemFontOfSize: DEFAULT_LABEL_FONT_SIZE]);
-        
-        [self addSubview:self.label];
+        [self addSubview: self.label];
     }
+    
+    /**
+     * this set the label's textAlignment equals to 1 because the UITextAlignment is for iOS < 6.0
+     * NSTextAlignment is for >= 6.0.
+     * NSTextAlignmentCenter and UITextAlignmentCenter all equal to 1.
+     */
+    self.label.textAlignment = 1;
+    self.label.backgroundColor = [UIColor clearColor];
+
+    self.label.font = (font != nil ? font :[UIFont systemFontOfSize: DEFAULT_LABEL_FONT_SIZE]);
+    _labelFont = self.label.font;
     
     self.label.text = text;
     self.label.textColor = self.labelTextColor;
@@ -220,6 +230,9 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
     }
 }
 
+/** 
+ *  Require GCTagLabelAccessoryCustom flag via setLabelText
+ */
 - (void)setCustomAccessoryImage:(UIImage *)image withInsets:(UIEdgeInsets)insets
 {
     if (self.accessoryType != GCTagLabelAccessoryCustom)
@@ -239,7 +252,7 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
 }
 
 - (void)resizeLabel {
-    CGSize textSize = [self.label.text sizeWithFont:self.label.font
+    CGSize textSize = [self.label.text sizeWithFont:self.labelFont
                                   constrainedToSize:self.fitSize
                                       lineBreakMode:NSLineBreakByWordWrapping];
     
@@ -251,7 +264,7 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
     if(needCorrection) {
         textSize.width = self.maxWidth - DEFAULT_HORIZONTAL_PADDING * 2 - deviationValue ;
         
-        CGSize defaultSize = [@"DefaultSize" sizeWithFont:self.label.font
+        CGSize defaultSize = [@"DefaultSize" sizeWithFont:self.labelFont
                                         constrainedToSize:self.fitSize
                                             lineBreakMode:NSLineBreakByWordWrapping];
         

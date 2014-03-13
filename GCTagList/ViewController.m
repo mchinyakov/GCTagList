@@ -8,8 +8,10 @@
 
 #import "ViewController.h"
 #import "GCTagList.h"
+#import "BorkColor.h"
+#import "UIFont+BorkFont.h"
 
-#define ARY @[@"Mark Wu", @"Green Chiu", @"Eikiy Chang", @"Gina Sun", @"Jeremy Chang", @"Sandra Hsu"]
+#define ARY @[@"Mark Wu", @"Жемчужный лук", @"Eikiy Chang", @"Gina Sun", @"Jeremy Chang", @"Sandra Hsu"]
 
 @interface ViewController () <GCTagListDataSource, GCTagListDelegate>
 @property (nonatomic, retain) NSMutableArray* tagNames;
@@ -31,16 +33,6 @@
      * if you need this setting, set it and call reloadData after.
      */
     self.nibTagList.firstRowLeftMargin = 30.f;
-    
-    /**
-     * labelfont default is nil, if you want change the font,
-     * you could use this property, this could keep the font with your taglabel.  
-     * use this property with xib, you should call reloadData.
-     * by Green at 08/28/2013.
-     */
-    
-    self.nibTagList.labelFont = [UIFont systemFontOfSize:18.f];
-    [self.nibTagList reloadData];
     
     /*
     GCTagList* taglist = [[[GCTagList alloc] initWithFrame:CGRectMake(0, 180, 320, 200)] autorelease];
@@ -67,14 +59,16 @@
     
     NSString* labelText = self.tagNames[index];
 
-    [tag setLabelText:labelText accessoryType:GCTagLabelAccessoryCustom];
+    [tag setLabelText:labelText
+        accessoryType:GCTagLabelAccessoryCustom
+             textFont:[UIFont extraLightBorkFontWithSize:20.0f]];
     [tag setCustomAccessoryImage:[UIImage imageNamed:@"add_icon"]
                       withInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
-    
     //set inactive tag style
     [tag setTagBackgroundColor:[UIColor blackColor]
        andLabelBackgroundColor:[UIColor blackColor]
-            withLabelTextColor:[UIColor orangeColor]];
+            withLabelTextColor:[UIColor borkOrangeColor]];
+    [tag setCornerRadius:15.0f];
     
     return tag;
 }
