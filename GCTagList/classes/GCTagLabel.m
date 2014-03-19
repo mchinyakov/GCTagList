@@ -10,34 +10,7 @@
 #import "GCTagList.h"
 #import "UIColor+Uitilies.h"
 
-
-#define COLOR_WATER_BLUE [UIColor colorWithString:@"#E0EAF4"]
-
-#define DEFAULT_LABEL_BACKGROUND_COLOR [UIColor lightGrayColor]
-#define DEFAULT_LABEL_TEXT_COLOR [UIColor blackColor]
-#define DEFAULT_LABEL_GRADIENT_START_COLOR [UIColor lightGrayColor]
-#define DEFAULT_LABEL_GRADIENT_END_COLOR [UIColor whiteColor]
-
-#define DEFAULT_LABEL_GRANITEN_COLORS @[ COLOR_WATER_BLUE, [COLOR_WATER_BLUE darken:.02f], [UIColor whiteColor]]
-
-#define DEFAULT_LABEL_SELECTED_GRANITEN_COLORS @[ [COLOR_WATER_BLUE darken:.1f], \
-[COLOR_WATER_BLUE darken:.1f], \
-[COLOR_WATER_BLUE darken:.1f] ]
-
-
-#define DEFAULT_LABEL_GRANDIEN_LOCATIONS @[@0, @0.4, @1];
-
-#define LABEL_CORNER_RADIUS 12.f
-#define LABEL_FONT_SIZE 13.f
-#define HORIZONTAL_PADDING 7.0f
-#define VERTICAL_PADDING 3.0f
-#define ACCESSORYVIEW_WIDTH 24.f
-#define ACCESSORY_SIZE CGSizeMake(40, 40)
-
 #pragma mark -
-CGFloat const LabelDefaultFontSize = LABEL_FONT_SIZE;
-CGFloat const LabelHorizontalPadding = HORIZONTAL_PADDING;
-CGFloat const LabelVerticalPadding = VERTICAL_PADDING;
 
 NSString * imageFontNameForType(GCTagLabelAccessoryType type) {
     NSString *imageFontName;
@@ -78,20 +51,16 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
 @interface GCTagLabel () {
     BOOL _selected;
 }
-@property (nonatomic, GC_STRONG) CAGradientLayer *gradientLayer;
 @property (nonatomic, GC_STRONG) UILabel *label;
 @property (nonatomic, GC_STRONG) UIButton *accessoryButton;
 @property (nonatomic, GC_STRONG) NSString *privateReuseIdentifier;
+@property (readwrite) CGFloat accessorySize;
 @property (assign) NSInteger index;
-@property (assign) BOOL isUsedGradient;
 
 - (void)resizeLabel;
 
-/** use the LabelBackgroundColor the draw the TagLabel's background */
-- (void)drawTagLabelUseLabelBackgroundColor:(UIColor *)color animated:(BOOL)animated;
-
-/** use the gradientColors the draw the TagLabel's background */
-- (void)drawTagLabelUseGradientColors:(NSArray *)colors locations:(NSArray *)locations animated:(BOOL)animated;
+- (void)drawTagLabelUseTagBackgroundColor:(UIColor *)tagColor
+                  andLabelBackgroundColor:(UIColor *)labelColor animated:(BOOL)animated;
 @end
 
 @implementation GCTagLabel
@@ -99,31 +68,32 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
 + (CGRect)rectangleOfTagLabelWithText:(NSString *)textStr
                         labelMaxWidth:(CGFloat)maxWidth
                             labelFont:(UIFont *)font
-                        accessoryType:(GCTagLabelAccessoryType)type {
+                        accessoryType:(GCTagLabelAccessoryType)type
+{
     CGSize textSize = [textStr sizeWithFont:font
                           constrainedToSize:CGSizeMake(9999, 9999)
                               lineBreakMode:NSLineBreakByWordWrapping];
     
-    CGFloat deviationValue = type != GCTagLabelAccessoryNone ? ACCESSORYVIEW_WIDTH : 0;
-    BOOL needCorrection =( (textSize.width + deviationValue + LabelHorizontalPadding * 2) > maxWidth );
-    if(needCorrection) {
-        textSize.width = maxWidth - LabelHorizontalPadding * 2 - deviationValue ;
-    }
+    CGFloat deviationValue = type != GCTagLabelAccessoryNone ? DEFAULT_ACCESSORYVIEW_SIDE : 0;
+    BOOL needCorrection =( (textSize.width + deviationValue + DEFAULT_HORIZONTAL_PADDING * 2) > maxWidth );
+    
+    if(needCorrection)
+        textSize.width = maxWidth - DEFAULT_HORIZONTAL_PADDING * 2 - deviationValue ;
     
     
     CGRect labelFrame;
-    labelFrame.origin = CGPointMake(LabelHorizontalPadding, 0);
+    labelFrame.origin = CGPointMake(DEFAULT_HORIZONTAL_PADDING, 0);
     CGRect buttonFrame = CGRectZero;
     if (type != GCTagLabelAccessoryNone) {
         CGPoint buttonPoint = CGPointZero;
         
-        buttonPoint.x = textSize.width + LabelHorizontalPadding;
+        buttonPoint.x = textSize.width + DEFAULT_HORIZONTAL_PADDING;
         if (!needCorrection) {
             buttonPoint.x -= 9;
         }
         buttonPoint.y = (textSize.height - 24) / 2 ;
         
-        buttonFrame = CGRectMake(0, 0, ACCESSORYVIEW_WIDTH, ACCESSORYVIEW_WIDTH);
+        buttonFrame = DEFAULT_ACCESSORYVIEW_RECT;
         buttonFrame.origin = buttonPoint;
     }
     labelFrame.size = textSize;
@@ -136,7 +106,7 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
         viewWidth = labelFrame.origin.x + CGRectGetWidth(labelFrame);
     }
     
-    viewWidth += LabelHorizontalPadding;
+    viewWidth += DEFAULT_HORIZONTAL_PADDING;
     //===========
     CGRect viewFrame = CGRectZero;
     viewFrame.size.width = viewWidth;
@@ -144,21 +114,20 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
     return viewFrame;
 }
 
-+ (NSArray *)defaultGradientColors {
-    return DEFAULT_LABEL_GRANITEN_COLORS;
-}
-
-+ (GCTagLabel *)tagLabelWithReuseIdentifier:(NSString *)identifier {
++ (GCTagLabel *)tagLabelWithReuseIdentifier:(NSString *)identifier
+{
     GCTagLabel *tag = GC_AUTORELEASE([[GCTagLabel alloc] initReuseIdentifier:identifier]);
     return tag;
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
     // public property
     self.labelTextColor = nil;
+    self.labelBackgroundColor = nil;
+    self.tagBackgroundColor = nil;
     
     // private property
-    self.gradientLayer = nil;
     self.label = nil;
     self.accessoryButton = nil;
     self.privateReuseIdentifier = nil;
@@ -167,7 +136,23 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
 #endif
 }
 
-- (id)initReuseIdentifier:(NSString *)identifier {
+- (void)setCornerRadius:(CGFloat)radius
+{
+    self.layer.cornerRadius = radius;
+    self.label.layer.cornerRadius = radius;
+}
+
+- (void)setTagBackgroundColor:(UIColor *)tagBackgroundColor andLabelBackgroundColor:(UIColor *)labelBackgroundColor withLabelTextColor:(UIColor *)labelTextColor
+{
+    self.tagBackgroundColor = tagBackgroundColor;
+    self.labelBackgroundColor = labelBackgroundColor;
+    self.labelTextColor = labelTextColor;
+    
+    self.label.textColor = self.labelTextColor;
+}
+
+- (id)initReuseIdentifier:(NSString *)identifier
+{
     self = [super init];
     if (self) {
         _selected = NO;
@@ -177,64 +162,89 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
         self.privateReuseIdentifier = identifier;
         self.fitSize = CGSizeMake(self.maxWidth, 1500);
         self.labelTextColor = DEFAULT_LABEL_TEXT_COLOR;
+        self.accessorySize = DEFAULT_ACCESSORYVIEW_SIDE;
         
-        self.gradientLayer = [CAGradientLayer layer];
-        self.gradientLayer.cornerRadius = LABEL_CORNER_RADIUS;
-        self.gradientLayer.borderWidth = 0.f;
-        
-        [self.layer insertSublayer:self.gradientLayer atIndex:0];
-        
-        self.layer.cornerRadius = LABEL_CORNER_RADIUS;
+        self.layer.cornerRadius = DEFAULT_TAG_CORNER_RADIUS;
     }
     return self;
 }
 
-- (void)setLabelText:(NSString *)text {
-    [self setLabelText:text
-         accessoryType:GCTagLabelAccessoryNone];
+- (void)setLabelText:(NSString *)text
+{
+    [self setLabelText:text accessoryType:GCTagLabelAccessoryNone];
 }
 
-- (void)setLabelText:(NSString *)text accessoryType:(GCTagLabelAccessoryType)type {
+- (void)setLabelText:(NSString *)text accessoryType:(GCTagLabelAccessoryType)type
+{
+    [self setLabelText:text accessoryType:type textFont:nil];
+}
+
+- (void)setLabelText:(NSString *)text accessoryType:(GCTagLabelAccessoryType)type textFont:(UIFont *)font
+{
     self.backgroundColor = [UIColor clearColor];
     self.accessoryType = type;
     
-    if (!self.label) {
+    if (self.label == nil)
+    {
         self.label = GC_AUTORELEASE([[UILabel alloc] init]);
-        /**
-         * this set the label's textAlignment equals to 1 because the UITextAlignment is for iOS < 6.0
-         * NSTextAlignment is for >= 6.0.
-         * NSTextAlignmentCenter and UITextAlignmentCenter all equal to 1.
-         */
-        self.label.textAlignment = 1;
-        self.label.backgroundColor = [UIColor clearColor];
-        self.label.font = [UIFont systemFontOfSize:LabelDefaultFontSize];
-        [self addSubview:self.label];
+        [self addSubview: self.label];
     }
+    
+    /**
+     * this set the label's textAlignment equals to 1 because the UITextAlignment is for iOS < 6.0
+     * NSTextAlignment is for >= 6.0.
+     * NSTextAlignmentCenter and UITextAlignmentCenter all equal to 1.
+     */
+    self.label.textAlignment = 1;
+    self.label.backgroundColor = [UIColor clearColor];
+
+    self.label.font = (font != nil ? font :[UIFont systemFontOfSize: DEFAULT_LABEL_FONT_SIZE]);
+    _labelFont = self.label.font;
+    
     self.label.text = text;
     self.label.textColor = self.labelTextColor;
     
-    if (type == GCTagLabelAccessoryNone) {
+    if (type != GCTagLabelAccessoryNone)
+    {
+        if (self.accessoryButton == nil)
+        {
+            self.accessoryButton = GC_AUTORELEASE([[UIButton alloc]
+                                                   initWithFrame: DEFAULT_ACCESSORYVIEW_RECT]);
+            [self addSubview: self.accessoryButton];
+        }
+        
+        if (type != GCTagLabelAccessoryCustom)
+        {
+            [self.accessoryButton setImage:[UIImage imageNamed:
+                                            imageFontNameForType(type)]
+                                  forState:UIControlStateNormal];
+            self.accessoryButton.imageEdgeInsets = UIEdgeInsetsMake(0, imageFontLeftInsetForType(type), 0, 0);
+        }
+        
+        self.accessoryButton.imageView.contentMode = UIViewContentModeCenter;
+        self.accessoryButton.highlighted = NO;
+        
+    }
+    else
+    {
         [self.accessoryButton removeFromSuperview];
         self.accessoryButton = nil;
     }
-    else if (type != GCTagLabelAccessoryNone && !self.accessoryButton) {
-        self.accessoryButton = GC_AUTORELEASE([[UIButton alloc] initWithFrame:
-                                               CGRectMake(0, 0,
-                                                          ACCESSORYVIEW_WIDTH, ACCESSORYVIEW_WIDTH)]);
-        [self addSubview:self.accessoryButton];
-    }
+}
+
+/** 
+ *  Require GCTagLabelAccessoryCustom flag via setLabelText
+ */
+- (void)setCustomAccessoryImage:(UIImage *)image withInsets:(UIEdgeInsets)insets andSize:(CGFloat)widthHeight
+{
+    if (self.accessoryType != GCTagLabelAccessoryCustom)
+        return;
     
-    if (type!=GCTagLabelAccessoryNone) {
-        [self.accessoryButton setImage:[UIImage imageNamed:imageFontNameForType(type)]
-                              forState:UIControlStateNormal];
-        self.accessoryButton.imageEdgeInsets = UIEdgeInsetsMake(0,
-                                                                imageFontLeftInsetForType(type),
-                                                                0,
-                                                                0);
-        self.accessoryButton.imageView.contentMode = UIViewContentModeCenter;
-        self.accessoryButton.highlighted = NO;
-    }
-    
+    [self.accessoryButton setImage:image forState:UIControlStateNormal];
+    [self.accessoryButton.imageView setContentMode:
+                                        UIViewContentModeScaleAspectFill];
+    self.accessoryButton.imageEdgeInsets = insets;
+    self.accessorySize = widthHeight;
 }
 
 - (NSString *)reuseIdentifier {
@@ -242,78 +252,53 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
 }
 
 - (void)setSelected:(BOOL)selected animation:(BOOL)animated {
-    _selected = selected;
-    if (!self.selectedEnabled) {
-        return;
-    }
-    
-    NSMutableArray *gradientColors = nil;
-    NSArray *tempLocations = nil;
-    
-    gradientColors = [NSMutableArray arrayWithCapacity:0];
-    if(!selected) {
-        if(self.isUsedGradient) {
-            for (UIColor *color in self.gradientColors) {
-                [gradientColors addObject:(id)color.CGColor];
-            }
-            tempLocations = self.gradientLocations;
-            if(!tempLocations)
-                tempLocations = DEFAULT_LABEL_GRANDIEN_LOCATIONS;
-        } else {
-            UIColor* temp = self.labelBackgroundColor ? self.labelBackgroundColor : COLOR_WATER_BLUE;
-            for (int index = 0; index < 3; index++) {
-                [gradientColors addObject:(id)temp.CGColor];
-            }
-            
-        }
-    } else {
-        for (UIColor *color in DEFAULT_LABEL_SELECTED_GRANITEN_COLORS) {
-            [gradientColors addObject:(id)color.CGColor];
-        }
-    }
-    [self drawTagLabelUseGradientColors:gradientColors
-                              locations:tempLocations animated:animated];
-}
-
-- (void)setCornerRadius:(CGFloat)cornerRadius {
-    self.gradientLayer.cornerRadius = cornerRadius;
-    self.layer.cornerRadius = cornerRadius;
+    if (self.selectedEnabled)
+        _selected = selected;
 }
 
 - (void)resizeLabel {
-    CGSize textSize = [self.label.text sizeWithFont:self.label.font
+    CGSize textSize = [self.label.text sizeWithFont:self.labelFont
                                   constrainedToSize:self.fitSize
                                       lineBreakMode:NSLineBreakByWordWrapping];
     
     
     //===========
-    CGFloat deviationValue = self.accessoryType != GCTagLabelAccessoryNone ? ACCESSORYVIEW_WIDTH : 0;
-    BOOL needCorrection =( (textSize.width + deviationValue + HORIZONTAL_PADDING * 2) > self.maxWidth );
+    CGFloat accessoryInsetsSum = self.accessoryButton.imageEdgeInsets.left
+                                + self.accessoryButton.imageEdgeInsets.right;
+    
+    CGFloat deviationValue = self.accessoryType != GCTagLabelAccessoryNone ?
+        self.accessorySize + accessoryInsetsSum : 0;
+    BOOL needCorrection =( (textSize.width + deviationValue + DEFAULT_HORIZONTAL_PADDING * 2) > self.maxWidth );
+    
     if(needCorrection) {
-        textSize.width = self.maxWidth - HORIZONTAL_PADDING * 2 - deviationValue ;
+        textSize.width = self.maxWidth - DEFAULT_HORIZONTAL_PADDING * 2 - deviationValue ;
         
-        CGSize defaultSize = [@"DefaultSize" sizeWithFont:self.label.font
+        CGSize defaultSize = [@"DefaultSize" sizeWithFont:self.labelFont
                                         constrainedToSize:self.fitSize
                                             lineBreakMode:NSLineBreakByWordWrapping];
         
         textSize.height = defaultSize.height;
     }
     
-    textSize.height += VERTICAL_PADDING * 2;
+    textSize.height += DEFAULT_VERTICAL_PADDING * 2;
     
     CGRect labelFrame;
-    labelFrame.origin = CGPointMake(HORIZONTAL_PADDING, 0);
+    labelFrame.origin = CGPointMake(DEFAULT_HORIZONTAL_PADDING, 0);
     
     if (self.accessoryType != GCTagLabelAccessoryNone) {
         CGPoint buttonPoint = CGPointZero;
         
-        buttonPoint.x = textSize.width + HORIZONTAL_PADDING;
+        buttonPoint.x = textSize.width + DEFAULT_HORIZONTAL_PADDING + self.accessoryButton.imageEdgeInsets.left - self.accessoryButton.imageEdgeInsets.right;
         if(!needCorrection)
             buttonPoint.x -= 9;
-        buttonPoint.y = (textSize.height - 24) / 2 ;
+        buttonPoint.y = (textSize.height - self.accessorySize) / 2 ;
         
         CGRect buttonFrame = self.accessoryButton.frame;
         buttonFrame.origin = buttonPoint;
+        buttonFrame.size.width = self.accessorySize;
+        buttonFrame.size.height = self.accessorySize;
+        buttonFrame.size.width += accessoryInsetsSum > 0 ? accessoryInsetsSum : 0;
+        
         self.accessoryButton.frame = buttonFrame;
     }
     labelFrame.size = textSize;
@@ -327,79 +312,34 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
     else {
         viewWidth = self.label.frame.origin.x + CGRectGetWidth(self.label.frame);
     }
-    viewWidth += HORIZONTAL_PADDING;
+    viewWidth += DEFAULT_HORIZONTAL_PADDING;
     //===========
     CGRect viewFrame = CGRectZero;
     viewFrame.size.width = viewWidth;
     viewFrame.size.height = textSize.height;
     self.frame = viewFrame;
-    self.gradientLayer.frame = self.bounds;
     
-    self.isUsedGradient = NO;
-    if (!self.labelBackgroundColor && !self.gradientColors) {
-        [self drawTagLabelUseLabelBackgroundColor:COLOR_WATER_BLUE animated:NO];
-        return;
-    }
-    
-    if (self.labelBackgroundColor) {
-        [self drawTagLabelUseLabelBackgroundColor:self.labelBackgroundColor animated:NO];
-        return;
-    }
-    
-    self.backgroundColor = nil;
-    
-    NSMutableArray *gradientColors = nil;
-    NSArray *tempLocations = nil;
-    if (self.gradientColors && self.gradientColors.count > 2) {
-        gradientColors = [NSMutableArray arrayWithCapacity:self.gradientColors.count];
-        
-        for (UIColor *color in self.gradientColors) {
-            [gradientColors addObject:(id)color.CGColor];
-        }
-        tempLocations = self.gradientLocations;  
-    }
-    else if(self.gradientColors.count < 2) {
-        [self drawTagLabelUseLabelBackgroundColor:COLOR_WATER_BLUE animated:NO];
-        return;
-    }
-    
-    self.isUsedGradient = YES;
-    
-    if (!tempLocations) {
-        tempLocations = DEFAULT_LABEL_GRANDIEN_LOCATIONS;
-    }
-    [self drawTagLabelUseGradientColors:gradientColors
-                              locations:tempLocations animated:NO];
+    UIColor *tbg = self.tagBackgroundColor != nil ? self.tagBackgroundColor: DEFAULT_TAG_BACKGROUND_COLOR;
+    UIColor *lbg = self.labelBackgroundColor != nil ? self.labelBackgroundColor: DEFAULT_LABEL_BACKGROUND_COLOR;
+    [self drawTagLabelUseTagBackgroundColor:tbg andLabelBackgroundColor:lbg animated:NO];
 }
 
-- (void)drawTagLabelUseLabelBackgroundColor:(UIColor *)color animated:(BOOL)animated {
+- (void)drawTagLabelUseTagBackgroundColor:(UIColor *)tagColor
+                  andLabelBackgroundColor:(UIColor *)labelColor
+                                 animated:(BOOL)animated
+{
     [CATransaction begin];
     if(!animated) {
         [CATransaction setValue:(id)kCFBooleanTrue
                          forKey:kCATransactionDisableActions];
     }
     else {
-        [CATransaction setAnimationDuration:.3f];
-    }
-    self.layer.backgroundColor = color.CGColor;
-    [CATransaction commit];
-}
-
-- (void)drawTagLabelUseGradientColors:(NSArray *)colors
-                            locations:(NSArray *)locations
-                             animated:(BOOL)animated {
-    [CATransaction begin];
-    if (!animated) {
-        [CATransaction setValue:(id)kCFBooleanTrue
-                         forKey:kCATransactionDisableActions];
-    }
-    else {
-        [CATransaction setAnimationDuration:.3f];
+        [CATransaction setAnimationDuration: 0.3f];
     }
     
-    self.layer.backgroundColor = [UIColor clearColor].CGColor;
-    self.gradientLayer.colors = colors;
-    self.gradientLayer.locations = locations;
+    self.layer.backgroundColor = tagColor.CGColor;
+    self.label.backgroundColor = labelColor;
+    
     [CATransaction commit];
 }
 
@@ -411,15 +351,6 @@ CGFloat imageFontLeftInsetForType(GCTagLabelAccessoryType type) {
         frame.origin = rect.origin;
         self.frame = frame;
     }
-}
-
-- (NSString *)description {
-    NSString *description = [NSString stringWithFormat:@"<GCTagLabel:%p, index:%d, text:%@, frame:%@>",
-                             self,
-                             _index,
-                             self.label.text,
-                             [NSValue valueWithCGRect:self.frame]];
-    return description;
 }
 
 @end

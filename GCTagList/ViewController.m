@@ -8,8 +8,10 @@
 
 #import "ViewController.h"
 #import "GCTagList.h"
+#import "BorkColor.h"
+#import "UIFont+BorkFont.h"
 
-#define ARY @[@"Mark Wu", @"Green Chiu", @"Eikiy Chang", @"Gina Sun", @"Jeremy Chang", @"Sandra Hsu"]
+#define ARY @[@"ЛУК-ПОРЕЙ", @"ЖЕМЧУЖНЫЙ ЛУК", @"САЛАТНЫЙ ЛУК", @"Gina Sun", @"Jeremy Chang", @"Sandra Hsu"]
 
 @interface ViewController () <GCTagListDataSource, GCTagListDelegate>
 @property (nonatomic, retain) NSMutableArray* tagNames;
@@ -32,16 +34,6 @@
      */
     self.nibTagList.firstRowLeftMargin = 30.f;
     
-    /**
-     * labelfont default is nil, if you want change the font,
-     * you could use this property, this could keep the font with your taglabel.  
-     * use this property with xib, you should call reloadData.
-     * by Green at 08/28/2013.
-     */
-    
-    self.nibTagList.labelFont = [UIFont systemFontOfSize:18.f];
-    [self.nibTagList reloadData];
-    
     /*
     GCTagList* taglist = [[[GCTagList alloc] initWithFrame:CGRectMake(0, 180, 320, 200)] autorelease];
     taglist.firstRowLeftMargin = 80.f;
@@ -61,29 +53,23 @@
     static NSString* identifier = @"TagLabelIdentifier";
     
     GCTagLabel* tag = [tagList dequeueReusableTagLabelWithIdentifier:identifier];
-    if(!tag) {
+    
+    if(!tag)
         tag = [GCTagLabel tagLabelWithReuseIdentifier:identifier];
-
-        tag.gradientColors = [GCTagLabel defaultGradientColors];
-        
-        [tag setCornerRadius:6.f];
-    }
     
     NSString* labelText = self.tagNames[index];
-    
-    /**
-     * you can change the AccessoryType with method setLabelText:accessoryType:
-     * or with no accessoryButton with method setLabelText:
-     */
-    
-    /* way 1 */
-    GCTagLabelAccessoryType type = GCTagLabelAccessoryCrossSign;
+
     [tag setLabelText:labelText
-        accessoryType:type];
-    
-    
-    //way 2
-    //[tag setLabelText:labelText];
+        accessoryType:GCTagLabelAccessoryCustom
+             textFont:[UIFont extraLightBorkFontWithSize:20.0f]];
+    [tag setCustomAccessoryImage:[UIImage imageNamed:@"add_icon"]
+                      withInsets:UIEdgeInsetsMake(0, 10, 0, 0)
+                         andSize:11.0f];
+    //set inactive tag style
+    [tag setTagBackgroundColor:[UIColor blackColor]
+       andLabelBackgroundColor:[UIColor clearColor]
+            withLabelTextColor:[UIColor borkOrangeColor]];
+    [tag setCornerRadius:15.0f];
     
     return tag;
 }
@@ -116,8 +102,8 @@
     /**
      * this is the insert method how to use.
      */
-    [self.tagNames insertObject:@"Girls' Generation" atIndex:index];
-    [self.tagNames insertObject:@"TaeTiSeo" atIndex:index];
+    [self.tagNames insertObject:@"ЛУК-ШАРЛОТ" atIndex:index];
+    [self.tagNames insertObject:@"ЖЕМЧУЖНЫЙ ЛУК" atIndex:index];
     [tagList insertTagLabelWithRange:NSMakeRange(index, 2) withAnimation:YES];
     
 }

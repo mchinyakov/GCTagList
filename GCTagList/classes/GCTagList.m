@@ -409,10 +409,10 @@ GCTagListRowRange GCTagListRowRangeMake(NSInteger nowRow, NSInteger maxRow) {
     CGFloat occupyHeight = CGRectGetHeight(tag.frame)+tag.frame.origin.y;
     
     NSInteger tempRow = 1;
-    CGFloat h = [GCTagList heightOfRows:tempRow font:self.labelFont];
+    CGFloat h = [GCTagList heightOfRows:tempRow font:tag.labelFont];
     while (h != occupyHeight) {
         tempRow++;
-        h = [GCTagList heightOfRows:tempRow font:self.labelFont];
+        h = [GCTagList heightOfRows:tempRow font:tag.labelFont];
     }
     
     row = tempRow;
@@ -486,11 +486,7 @@ GCTagListRowRange GCTagListRowRangeMake(NSInteger nowRow, NSInteger maxRow) {
             tag.maxWidth = rowMaxWidth;
         }
         
-        // set the font for tag's label.
-        if (self.labelFont) {
-            [tag setValue:self.labelFont forKeyPath:@"label.font"];
-        }
-        
+        [tag setValue:tag.labelFont forKeyPath:@"label.font"];
         [tag performSelector:@selector(resizeLabel)];
         [tag setValue:[NSString stringWithFormat:@"%d",i] forKeyPath:@"index"];
         
@@ -720,15 +716,16 @@ GCTagListRowRange GCTagListRowRangeMake(NSInteger nowRow, NSInteger maxRow) {
     NSInteger row = 1;
     CGRect preLabelFrame = CGRectZero;
     for (NSString *text in texts) {
-        CGSize textSize = [text sizeWithFont:[UIFont systemFontOfSize:LabelDefaultFontSize]
+        CGSize textSize = [text sizeWithFont:[UIFont systemFontOfSize:DEFAULT_LABEL_FONT_SIZE]
                            constrainedToSize:CGSizeMake(9999, 9999)
                                lineBreakMode:NSLineBreakByWordWrapping];
-        textSize.width += LabelHorizontalPadding * 2;
-        textSize.height += LabelVerticalPadding * 2;
+        textSize.width += DEFAULT_HORIZONTAL_PADDING * 2;
+        textSize.height += DEFAULT_VERTICAL_PADDING * 2;
+        
         BOOL needCorrection =( (textSize.width ) > tagLabelMaxWidth );
-        if(needCorrection) {
+        if(needCorrection)
             textSize.width = tagLabelMaxWidth;
-        }
+        
         CGRect tagLabelFrame;
         tagLabelFrame.origin = CGPointZero;
         tagLabelFrame.size = textSize;
@@ -749,21 +746,21 @@ GCTagListRowRange GCTagListRowRangeMake(NSInteger nowRow, NSInteger maxRow) {
 
 + (CGFloat)heightOfRows:(NSInteger)numberOfRow {
     return [self heightOfRows:numberOfRow
-                         font:[UIFont systemFontOfSize:LabelDefaultFontSize]];
+                         font:[UIFont systemFontOfSize:DEFAULT_LABEL_FONT_SIZE]];
 }
 
 + (CGFloat)heightOfRows:(NSInteger)numberOfRow font:(UIFont *)font {
     NSString *text = @"I'm Sample.";
     
     if (!font) {
-        font = [UIFont systemFontOfSize:LabelDefaultFontSize];
+        font = [UIFont systemFontOfSize:DEFAULT_LABEL_FONT_SIZE];
     }
     CGSize textSize = [text sizeWithFont:font
                        constrainedToSize:CGSizeMake(9999, 9999)
                            lineBreakMode:NSLineBreakByWordWrapping];
     
-    CGFloat height = (textSize.height+LabelVerticalPadding*2)*numberOfRow;
-    height += (BOTTOM_MARGIN * (numberOfRow-1));
+    CGFloat height = (textSize.height + DEFAULT_VERTICAL_PADDING * 2) * numberOfRow;
+    height += (BOTTOM_MARGIN * (numberOfRow - 1));
     return height;
 }
 @end

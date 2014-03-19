@@ -45,38 +45,46 @@
 #define GC_RETAIN(exp) [exp retain]
 #endif
 
-@class GCTagList;
+#define DEFAULT_TAG_BACKGROUND_COLOR [UIColor colorWithString:@"#E0EAF4"]
+#define DEFAULT_TAG_CORNER_RADIUS 10.0f;
 
-extern CGFloat const LabelDefaultFontSize;
-extern CGFloat const LabelHorizontalPadding;
-extern CGFloat const LabelVerticalPadding;
+#define DEFAULT_LABEL_BACKGROUND_COLOR [UIColor lightGrayColor]
+#define DEFAULT_LABEL_TEXT_COLOR [UIColor blackColor]
+
+#define DEFAULT_LABEL_FONT_SIZE 13.0f
+#define DEFAULT_HORIZONTAL_PADDING 10.0f
+#define DEFAULT_VERTICAL_PADDING 3.0f
+
+#define DEFAULT_ACCESSORYVIEW_SIDE 25.0f
+#define DEFAULT_ACCESSORYVIEW_RECT CGRectMake(0, 0, DEFAULT_ACCESSORYVIEW_SIDE, DEFAULT_ACCESSORYVIEW_SIDE)
+
+@class GCTagList;
 
 typedef NS_ENUM(NSInteger, GCTagLabelAccessoryType) {
     GCTagLabelAccessoryNone,
     GCTagLabelAccessoryCrossSign,
-    GCTagLabelAccessoryArrowSign
+    GCTagLabelAccessoryArrowSign,
+    GCTagLabelAccessoryCustom
 };
 
 @interface GCTagLabel : UIView
 @property (nonatomic, readonly, copy) NSString* reuseIdentifier;
+
+/* Label style managing */
 @property (nonatomic, GC_STRONG) UIColor *labelTextColor;
-
-/**
- * labelBackgroundColor's Priority > gradientColors,
- * if labelBackgroundColor and gradientColors all nil,
- * will use default color #E0EAF4
- */
 @property (nonatomic, GC_STRONG) UIColor *labelBackgroundColor;
-
-/**
- * if gradientColors's count is less 2, will use default labelBackgroundColor;
- */
-@property (nonatomic, GC_STRONG) NSArray *gradientColors; ///< ...
-@property (nonatomic, GC_STRONG) NSArray *gradientLocations; ///< ...
+@property (readonly) UIFont *labelFont;
+/* Tag style managing */
+@property (nonatomic, GC_STRONG) UIColor *tagBackgroundColor;
 
 @property (assign) GCTagLabelAccessoryType accessoryType;
-@property (assign) BOOL selectedEnabled; // if YES, the taglabel could show selected state. default is YES.
+
+/* if selectedEnabled = YES then taglabel could show
+ * selected state. default is YES
+ */
+@property (assign) BOOL selectedEnabled;
 @property (readonly) BOOL selected;
+
 @property (assign) CGSize fitSize;
 
 /**
@@ -93,7 +101,6 @@ typedef NS_ENUM(NSInteger, GCTagLabelAccessoryType) {
                         labelMaxWidth:(CGFloat)maxWidth
                             labelFont:(UIFont *)font
                         accessoryType:(GCTagLabelAccessoryType)type;
-+ (NSArray *)defaultGradientColors;
 + (GCTagLabel *)tagLabelWithReuseIdentifier:(NSString *)identifier;
 - (id)initReuseIdentifier:(NSString *)identifier;
 
@@ -102,8 +109,14 @@ typedef NS_ENUM(NSInteger, GCTagLabelAccessoryType) {
  */
 - (void)setLabelText:(NSString*)text;
 - (void)setLabelText:(NSString*)text accessoryType:(GCTagLabelAccessoryType)type;
+- (void)setLabelText:(NSString*)text accessoryType:(GCTagLabelAccessoryType)type textFont:(UIFont *)font;
+- (void)setCustomAccessoryImage:(UIImage *)image withInsets:(UIEdgeInsets)insets andSize:(CGFloat)widthHeight;
 - (void)setSelected:(BOOL)selected animation:(BOOL)animated;
-- (void)setCornerRadius:(CGFloat)cornerRadius; // default is 12.f
+/* style managing */
+- (void)setCornerRadius:(CGFloat)radius;
+- (void)setTagBackgroundColor:(UIColor *)tagBackgroundColor
+      andLabelBackgroundColor:(UIColor *)labelBackgroundColor
+           withLabelTextColor:(UIColor *)labelTextColor;
 @end
 
 

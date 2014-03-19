@@ -117,10 +117,6 @@
 @property (nonatomic, GC_WEAK) IBOutlet id<GCTagListDelegate> delegate;
 @property (nonatomic, GC_WEAK) IBOutlet id<GCTagListDataSource> dataSource;
 
-/**
- * new property for TagLabel's font to use custom font, and the font is same in the same taglist 
- */
-@property (nonatomic, GC_STRONG) UIFont *labelFont;
 @property (nonatomic) CGFloat firstRowLeftMargin;
 
 /**
