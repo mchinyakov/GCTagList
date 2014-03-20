@@ -22,12 +22,12 @@
 		18A0781316DE08D3005CBA7A /* GCTagList.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A0781016DE08D3005CBA7A /* GCTagList.m */; };
 		18A0781516DE0966005CBA7A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A0781416DE0966005CBA7A /* QuartzCore.framework */; };
 		9C4A17F618D08C880083683F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C4A17F518D08C880083683F /* Images.xcassets */; };
-		9C4A180018D09F8E0083683F /* BorkColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C4A17FD18D09F8E0083683F /* BorkColor.m */; };
-		9C4A180118D09F8E0083683F /* UIFont+BorkFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C4A17FF18D09F8E0083683F /* UIFont+BorkFont.m */; };
 		9C4A180718D09FBE0083683F /* franckerw1g-condensedlight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C4A180318D09FBE0083683F /* franckerw1g-condensedlight.otf */; };
 		9C4A180818D09FBE0083683F /* franckerw1g-condensedreg.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C4A180418D09FBE0083683F /* franckerw1g-condensedreg.otf */; };
 		9C4A180918D09FBE0083683F /* franckerw1g-condensedsmbold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C4A180518D09FBE0083683F /* franckerw1g-condensedsmbold.otf */; };
 		9C4A180A18D09FBE0083683F /* franckerw1g-condensedxlight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9C4A180618D09FBE0083683F /* franckerw1g-condensedxlight.otf */; };
+		A6D3ED9818DB6B940065813A /* BorkColor.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D3ED9518DB6B940065813A /* BorkColor.m */; };
+		A6D3ED9918DB6B940065813A /* UIFont+BorkFont.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D3ED9718DB6B940065813A /* UIFont+BorkFont.m */; };
 		C2F1E61117D8C9A20013C097 /* UIColor+Uitilies.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F1E61017D8C9A20013C097 /* UIColor+Uitilies.m */; };
 		C2F1E61417D8CBC80013C097 /* GCTagLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F1E61317D8CBC80013C097 /* GCTagLabel.m */; };
 /* End PBXBuildFile section */
@@ -54,14 +54,14 @@
 		18A0781016DE08D3005CBA7A /* GCTagList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCTagList.m; sourceTree = "<group>"; };
 		18A0781416DE0966005CBA7A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		9C4A17F518D08C880083683F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		9C4A17FC18D09F8E0083683F /* BorkColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BorkColor.h; sourceTree = "<group>"; };
-		9C4A17FD18D09F8E0083683F /* BorkColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BorkColor.m; sourceTree = "<group>"; };
-		9C4A17FE18D09F8E0083683F /* UIFont+BorkFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+BorkFont.h"; sourceTree = "<group>"; };
-		9C4A17FF18D09F8E0083683F /* UIFont+BorkFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+BorkFont.m"; sourceTree = "<group>"; };
 		9C4A180318D09FBE0083683F /* franckerw1g-condensedlight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "franckerw1g-condensedlight.otf"; sourceTree = "<group>"; };
 		9C4A180418D09FBE0083683F /* franckerw1g-condensedreg.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "franckerw1g-condensedreg.otf"; sourceTree = "<group>"; };
 		9C4A180518D09FBE0083683F /* franckerw1g-condensedsmbold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "franckerw1g-condensedsmbold.otf"; sourceTree = "<group>"; };
 		9C4A180618D09FBE0083683F /* franckerw1g-condensedxlight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "franckerw1g-condensedxlight.otf"; sourceTree = "<group>"; };
+		A6D3ED9418DB6B940065813A /* BorkColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BorkColor.h; path = classes/BorkColor.h; sourceTree = "<group>"; };
+		A6D3ED9518DB6B940065813A /* BorkColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BorkColor.m; path = classes/BorkColor.m; sourceTree = "<group>"; };
+		A6D3ED9618DB6B940065813A /* UIFont+BorkFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIFont+BorkFont.h"; path = "classes/UIFont+BorkFont.h"; sourceTree = "<group>"; };
+		A6D3ED9718DB6B940065813A /* UIFont+BorkFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIFont+BorkFont.m"; path = "classes/UIFont+BorkFont.m"; sourceTree = "<group>"; };
 		C2F1E60F17D8C9A20013C097 /* UIColor+Uitilies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Uitilies.h"; sourceTree = "<group>"; };
 		C2F1E61017D8C9A20013C097 /* UIColor+Uitilies.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Uitilies.m"; sourceTree = "<group>"; };
 		C2F1E61217D8CBC80013C097 /* GCTagLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCTagLabel.h; sourceTree = "<group>"; };
@@ -167,10 +167,10 @@
 			isa = PBXGroup;
 			children = (
 				9C4A180218D09FBE0083683F /* franckerw1g */,
-				9C4A17FC18D09F8E0083683F /* BorkColor.h */,
-				9C4A17FD18D09F8E0083683F /* BorkColor.m */,
-				9C4A17FE18D09F8E0083683F /* UIFont+BorkFont.h */,
-				9C4A17FF18D09F8E0083683F /* UIFont+BorkFont.m */,
+				A6D3ED9418DB6B940065813A /* BorkColor.h */,
+				A6D3ED9518DB6B940065813A /* BorkColor.m */,
+				A6D3ED9618DB6B940065813A /* UIFont+BorkFont.h */,
+				A6D3ED9718DB6B940065813A /* UIFont+BorkFont.m */,
 			);
 			name = bork;
 			sourceTree = "<group>";
@@ -258,14 +258,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6D3ED9818DB6B940065813A /* BorkColor.m in Sources */,
 				18A077F416DE07F8005CBA7A /* main.m in Sources */,
-				9C4A180118D09F8E0083683F /* UIFont+BorkFont.m in Sources */,
 				18A077F816DE07F8005CBA7A /* AppDelegate.m in Sources */,
 				18A0780116DE07F8005CBA7A /* ViewController.m in Sources */,
 				18A0781316DE08D3005CBA7A /* GCTagList.m in Sources */,
 				C2F1E61117D8C9A20013C097 /* UIColor+Uitilies.m in Sources */,
 				C2F1E61417D8CBC80013C097 /* GCTagLabel.m in Sources */,
-				9C4A180018D09F8E0083683F /* BorkColor.m in Sources */,
+				A6D3ED9918DB6B940065813A /* UIFont+BorkFont.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
