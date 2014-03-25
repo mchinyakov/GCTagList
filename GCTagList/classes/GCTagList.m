@@ -709,30 +709,33 @@ GCTagListRowRange GCTagListRowRangeMake(NSInteger nowRow, NSInteger maxRow) {
 @end
 
 @implementation GCTagList (AbstractHeight)
+
 + (NSInteger)rowOfTagListWithFirstRowLeftMargin:(CGFloat)leftMargin
                                     tagListWith:(CGFloat)tagListWith
                                tagLabelMaxWidth:(CGFloat)tagLabelMaxWidth
-                                   tagLabelText:(NSArray *)texts {
+                                   tagLabelText:(NSArray *)texts
+                                   tagLabelFont:(UIFont *)font
+{
     NSInteger row = 1;
     CGRect preLabelFrame = CGRectZero;
     for (NSString *text in texts) {
-        CGSize textSize = [text sizeWithFont:[UIFont systemFontOfSize:DEFAULT_LABEL_FONT_SIZE]
+        CGSize textSize = [text sizeWithFont:font
                            constrainedToSize:CGSizeMake(9999, 9999)
                                lineBreakMode:NSLineBreakByWordWrapping];
-        textSize.width += DEFAULT_HORIZONTAL_PADDING * 2;
-        textSize.height += DEFAULT_VERTICAL_PADDING * 2;
-        
+        textSize.width += DEFAULT_HORIZONTAL_PADDING * 2 + DEFAULT_ACCESSORYVIEW_SIDE;
+        textSize.height += DEFAULT_VERTICAL_PADDING * 2 + DEFAULT_ACCESSORYVIEW_SIDE;
+
         BOOL needCorrection =( (textSize.width ) > tagLabelMaxWidth );
         if(needCorrection)
             textSize.width = tagLabelMaxWidth;
-        
+
         CGRect tagLabelFrame;
         tagLabelFrame.origin = CGPointZero;
         tagLabelFrame.size = textSize;
-        
+
         leftMargin = CGRectGetWidth(preLabelFrame) == 0.f ? leftMargin : 0;
         if (leftMargin + preLabelFrame.origin.x + preLabelFrame.size.width + CGRectGetWidth(tagLabelFrame) + LABEL_MARGIN
-            > tagListWith) {
+                > tagListWith) {
             tagLabelFrame.origin = CGPointMake(0, preLabelFrame.origin.y + CGRectGetHeight(tagLabelFrame) + BOTTOM_MARGIN);
             row++;
         } else {
@@ -740,9 +743,23 @@ GCTagListRowRange GCTagListRowRangeMake(NSInteger nowRow, NSInteger maxRow) {
         }
         preLabelFrame = tagLabelFrame;
     }
-    
+
     return row;
 }
+
++ (NSInteger)rowOfTagListWithFirstRowLeftMargin:(CGFloat)leftMargin
+                                    tagListWith:(CGFloat)tagListWith
+                               tagLabelMaxWidth:(CGFloat)tagLabelMaxWidth
+                                   tagLabelText:(NSArray *)texts
+{
+    return [self rowOfTagListWithFirstRowLeftMargin:leftMargin
+                                        tagListWith:tagListWith
+                                   tagLabelMaxWidth:tagLabelMaxWidth
+                                       tagLabelText:texts
+                                       tagLabelFont:[UIFont systemFontOfSize:DEFAULT_LABEL_FONT_SIZE]];
+
+}
+
 
 + (CGFloat)heightOfRows:(NSInteger)numberOfRow {
     return [self heightOfRows:numberOfRow

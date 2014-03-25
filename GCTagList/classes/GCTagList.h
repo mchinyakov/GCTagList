@@ -168,10 +168,9 @@
 /**
  * Only support TagLabelAccessoryType = GCTagLabelAccessoryNone and default font 
  */
-+ (NSInteger)rowOfTagListWithFirstRowLeftMargin:(CGFloat)leftMargin
-                                    tagListWith:(CGFloat)tagListWith
-                               tagLabelMaxWidth:(CGFloat)tagLabelMaxWidth
-                                   tagLabelText:(NSArray *)texts;
++ (NSInteger)rowOfTagListWithFirstRowLeftMargin:(CGFloat)leftMargin tagListWith:(CGFloat)tagListWith tagLabelMaxWidth:(CGFloat)tagLabelMaxWidth tagLabelText:(NSArray *)texts tagLabelFont:(UIFont *)font;
+
++ (NSInteger)rowOfTagListWithFirstRowLeftMargin:(CGFloat)leftMargin tagListWith:(CGFloat)tagListWith tagLabelMaxWidth:(CGFloat)tagLabelMaxWidth tagLabelText:(NSArray *)texts;
 
 /**
  * get height of rows.
